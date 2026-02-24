@@ -1,0 +1,11 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     common_tree
+relocations:
+  - { offset: 0x26, size: 0x8, addend: 0x0, symName: _create_node, symObjAddr: 0x0, symBinAddr: 0x100003418, symSize: 0x1B4 }
+  - { offset: 0x3B, size: 0x8, addend: 0x0, symName: _.str, symObjAddr: 0x940, symBinAddr: 0x100003DE0, symSize: 0x0 }
+  - { offset: 0xB3, size: 0x8, addend: 0x0, symName: _create_node, symObjAddr: 0x0, symBinAddr: 0x100003418, symSize: 0x1B4 }
+  - { offset: 0xF7, size: 0x8, addend: 0x0, symName: _insert, symObjAddr: 0x1B4, symBinAddr: 0x1000035CC, symSize: 0x35C }
+  - { offset: 0x137, size: 0x8, addend: 0x0, symName: _print_tree, symObjAddr: 0x510, symBinAddr: 0x100003928, symSize: 0x14C }
+  - { offset: 0x15B, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x65C, symBinAddr: 0x100003A74, symSize: 0x288 }
+...
