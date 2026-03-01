@@ -1,0 +1,17 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     bin
+relocations:
+  - { offset: 0x26, size: 0x8, addend: 0x0, symName: _create_node, symObjAddr: 0x0, symBinAddr: 0x100003744, symSize: 0x70 }
+  - { offset: 0x8A, size: 0x8, addend: 0x0, symName: _create_node, symObjAddr: 0x0, symBinAddr: 0x100003744, symSize: 0x70 }
+  - { offset: 0xC0, size: 0x8, addend: 0x0, symName: _get_min, symObjAddr: 0x70, symBinAddr: 0x1000037B4, symSize: 0x70 }
+  - { offset: 0xF6, size: 0x8, addend: 0x0, symName: _insert, symObjAddr: 0xE0, symBinAddr: 0x100003824, symSize: 0x134 }
+  - { offset: 0x128, size: 0x8, addend: 0x0, symName: _get_max, symObjAddr: 0x214, symBinAddr: 0x100003958, symSize: 0x70 }
+  - { offset: 0x15E, size: 0x8, addend: 0x0, symName: _delete_node, symObjAddr: 0x284, symBinAddr: 0x1000039C8, symSize: 0x1E8 }
+  - { offset: 0x1F6, size: 0x8, addend: 0x0, symName: _delete_tree, symObjAddr: 0x46C, symBinAddr: 0x100003BB0, symSize: 0x50 }
+  - { offset: 0x21A, size: 0x8, addend: 0x0, symName: _search_node, symObjAddr: 0x4BC, symBinAddr: 0x100003C00, symSize: 0xB4 }
+  - { offset: 0x250, size: 0x8, addend: 0x0, symName: _postorder_print, symObjAddr: 0x570, symBinAddr: 0x100003CB4, symSize: 0x70 }
+  - { offset: 0x274, size: 0x8, addend: 0x0, symName: _inorder_print, symObjAddr: 0x5E0, symBinAddr: 0x100003D24, symSize: 0x70 }
+  - { offset: 0x298, size: 0x8, addend: 0x0, symName: _preorder_print_recursive, symObjAddr: 0x650, symBinAddr: 0x100003D94, symSize: 0x70 }
+  - { offset: 0x2BC, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x6C0, symBinAddr: 0x100003E04, symSize: 0x158 }
+...
