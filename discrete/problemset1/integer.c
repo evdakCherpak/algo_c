@@ -3,8 +3,11 @@
 #include "integer.h"
 
 
-#define BASE (sizeof(int) << 3)
+#define BASE (sizeof(limb_t) << 3)
 #define GET_LIMB_SIGN ()
+#define 
+#define SMASK ((limb_t))
+#define AMASK ((limb_t)(SMASK - 1))
 
 int get_integer_sign(Integer* num){
     if (num == NULL){ return 52; }
@@ -102,19 +105,37 @@ Integer* copy_integer(Integer* num){
     return buffer;
 }
 
-int cmp_integer(Integer* first, Integer* second){
-
-}
-
-int cmp_integer_same_size(Integer* first, Integer* second){
-    
-}
-
 int cmp_integer_abs(Integer* first, Integer* second){
     if (first == NULL || second == NULL){ return 52; }
     limb_t size_first = get_size(first);
     limb_t size_second = get_size(second);
-    while (size_first)
+
+    while (size_first > 0 && get_limb(first, size_first - 1) == 0){
+        size_first--;
+    }
+    while (size_second > 0 && get_limb(second, size_second - 1) == 0){
+        size_second--;
+    }
+
+    if (size_first != size_second){
+        if (size_first > size_second){
+            return 1;
+        }
+        return -1;
+    }
+
+    int i;
+    for (i = size_first - 1; i >= 0; i--){
+        limb_t limb_first = get_limb(first, i);
+        limb_t limb_second = get_limb(second, i);
+        if (limb_first != limb_second){
+            if (limb_first > limb_second){
+                return 1
+            }
+            return -1;
+        }
+    }
+    return 0;
 }
 
 Integer* init_integer(void){
@@ -226,27 +247,117 @@ Integer* shift_limbs(Integer* num, limb_t shift){
     limb_t size_num = get_size(num);
     limb_t size_with_shift = size_num + shift;
     limb_t* buffer = (limb_t*)calloc(size_with_shift, sizeof(limb_t));
-    if (buffer )
+    if (buffer == NULL){ return NULL; }
+
+    int i;
+    for (i = 0; i < size_num; i++){
+        buffer[i + shift] = get_word(num, i);
+    }
+    Integer* res = from_limbs(buffer, size_with_shift);
+    free(buffer);
+    return res;
 }
 
 Integer* get_low_half(Integer* num, limb_t half){
+    if (num == NULL){ return NULL; }
 
+    limb_t size_num = get_size(num);
+    limb_t take_size = size_num < half ? size_num : half;
+    
+    if (take_size == 0){ return init_integer; }
+
+    limb_t* buffer = (limb_t*)calloc(take_size, sizeof(limb_t));
+    if (buffer == NULL){ return NULL; }
+    
+    int i;
+    for (i = 0; i < take_size; i++){
+        buffer[i] = get_limb(num, take_size);
+    }
+    Integer* res = from_limbs(buffer, take_size);
+    free(buffer);
+    return res;
 }
 
 Integer* get_high_half(Integer* num, limb_t half){
+    if (num == NULL){ return NULL; }
+    limb_t size_num = get_size(num);
+    if (size_num <= half){ return init_integer(); }
 
+    limb_t take_size = size_num - half;
+    limb_t* buffer = (limb_t*)calloc(take_size, sizeof(limb_t));
+    if (buffer == NULL){ return NULL; }
+
+    int i;
+    for (i = 0; i < take_size; i++){
+        buffer[i] = get_limb(num, take_size);
+    }
+    Integer* res = from_limbs(buffer, take_size);
+    free(buffer);
+    return res;
 }
 
 Integer* rec_algo_karatsuba(Integer* first, Integer* second){
+    if (first == NULL || second == NULL){ return NULL; }
+    limb_t size_first = get_size(first);
+    limb_t size_second = get_size(second);
+    if (size_first <= 2 || size_second <= 2){
+        return mul_at_new_integer(first, second);
+    }
+    limb_t half = (size_first > size_second ? size_first : size_second) / 2;
 
+    Integer* first_low = get_low(first, half);
+    Integer* first_high = get_high(first, half);
+    Integer* second_low = get_low(second, half);
+    Integer* second_high = get_high(second, half);
+
+    Integer* low_mul = rec_algo_karatsuba(first_low, second_low);
+    Integer* high_mul = rec_algo_karatsuba(first_high, second_high);
+
+    Integer* sum_first_parts = add_at_new_integer();
+    Integer* sum_second_parts = add_at_new_integer();
+    Integer* middle_mul = rec_algo_karatsuba(sum_first_parts, sum_second_parts);
+    sub_at_first_integer();
+    sub_at_first_integer();
+
+    Integer* high_part = shift_limbs(high_mul, 2 * half);
+    Integer* middle_part = shift_limbs(middle_mul, half);
+    Integer* res = add_at_new_integer(high_part, middle_part);
+    add_at_first_integer(&res, low_mul);
+
+    delete_integer(first_low); delete_integer(first_high);
+    delete_integer(second_low); delete_integer(second_high);
+    delete_integer(sum_first_parts); delete_integer(sum_second_parts);
+    delete_integer(high_mul); delete_integer(middle_mul); delete_integer(low_mul);
+    delete_integer(high_part); delete_integer(middle_part);
+    
+    return res;
 }
 
 Integer* karatsuba_at_new_integer(Integer* fisrt, Integer* second){
+    if (first == NULL || second == NULL){ return NULL; }
+    Integer* first_copy = copy_integer(first);
+    Integer* second_copy = copy_integer(second);
+    set_integer_sign(first_copy, 0);
+    set_integer_sign(second_copy, 0)
+
+    Integer* res = rec_algo_karatsuba(first_copy, second_copy);
+    set_sign(res, get_integer_sign(first) ^ get_integer_sign(second));
+
+    if (((limb_t)res -> high_limb & AMASK) == 0 && (res -> limbs == NULL)){
+        res -> high_limb = 0;
+    }
+
+    delete_integer(first_copy); delete_integer(second_copy);
+    return res;
 
 }
 
 Integer* karatsuba_at_first_integer(Integer** first, Integer* second){
-
+    if (first == NULL || second == NULL){ return NULL; }
+    Integer* res = karatsuba_at_new_integer(*first, second)
+    delete_integer(*first);
+    *first = res;
+    return * first;
 }
 
 Integer* integer_from_str(char* num_string){
